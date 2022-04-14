@@ -1,0 +1,101 @@
+body {
+    background-color:#ffebce;
+    color:#cc8258;
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 16pt;
+}
+
+/* class selector - selects all elements with the specified class.
+classes, like IDs, are defined by you. */
+.section {
+    background-color: #eccba8;
+}
+
+nav {
+    display:flex;
+    justify-content: space-around;
+    width:100%;
+}
+
+/* general child selector (a li that is somewhere within 
+  the hierarchy of a nav but it doesn't have to be the direct child) */
+nav li {
+    list-style:none;
+    text-align: center;
+}
+
+a {
+    text-decoration: none;
+    color:#cc8258;
+    padding:.5rem;
+    border-radius: 1rem 1rem 0rem 0rem;
+}
+
+/* CSS events - specific styling for when you hover over an anchor element */
+nav a:hover {
+    color:#cc8258;
+    background-color: white;
+}
+
+/* ID selector - styles the element with the specified ID (should be unique) */
+#navList {
+    display:grid;
+    grid-template: 
+    "li li li li"
+    / 30% 5% 30% 30%;
+    width: 100%;
+}
+
+#loginWindow {
+    padding-top:1.25rem;
+    padding-right:2rem;
+    display:flex;
+    justify-content: right;
+    width:100%;
+}
+
+input, select {
+    border: 2px solid #cc8258;
+    border-radius: .25rem;
+    margin: 0rem 1rem;
+}
+
+button {
+    background-color: #cc8258;
+    color:white;
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 12pt;
+    border-radius: 1rem;
+    border-width:0;
+    padding:.5rem;
+}
+
+button:hover {
+    background-color: #ffebce;
+    color:#cc8258;
+}
+
+/* when the button is being clicked */
+button:active {
+    background-color: white;
+}
+
+main, footer {
+    text-align: center;
+    padding:1rem;
+    margin:1rem auto;
+}
+
+/* direct child selector - the element has to be a direct child */
+main>img {
+    width:48%;
+}
+
+table, th, td {
+    border-collapse: collapse;
+    border:2px solid #cc8258;
+}
+
+th, td {
+    padding: 1rem;
+}

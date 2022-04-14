@@ -1,4 +1,5 @@
 package net.revature.services;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,7 +34,10 @@ public class UserServiceImpl implements UserService {
 			newUser.setId(id);
 			return newUser;
 		} // else
-		return null;
+		else {
+			throw new UsernameAlreadyExistsException();
+		}
+
 
 	}
 
@@ -61,34 +65,48 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Users submitStory(Users users, Story storyToSubmit) throws AlreadySubmittedException {
+public Users submitStory(Users users, Story storyToSubmit) throws AlreadySubmittedException,Exception  {
 		
 storyToSubmit = storyDao.getById(storyToSubmit.getId());
 		
-		// make sure the pet is not already adopted
+		
 		if (storyToSubmit.getStatus().equals("Approved")) {
 			throw new AlreadySubmittedException();
 		} else {
-			// check user to make sure account is valid
+			
 			users = userDao.getById(users.getId());
 			if (users != null) {
 				// proceed with adopting
 				storyToSubmit.setStatus("Approved");
 				users.getStorys().add(storyToSubmit);
+				try {
 				storyDao.update(storyToSubmit);
 				userDao.update(users);
-			} 
-			return users;
+	           
+				userDao.updateStorys(storyToSubmit.getId(), users.getId());
+				}catch(SQLException e){
+					e.printStackTrace();
+					throw new Exception();
+				}
+					
+		}	
+		return users;
+		}
 	}
-	}
-	
+		
+
+
+
+
+
+
+	@Override
 	public Story getStoryById(int id) {
-		
-			return storyDao.getById(id);
-
-		
+		   return storyDao.getById(id);
 	}
-	
-	
 
-}
+	@Override
+	public Users getById(int id) {
+		return userDao.getById(id);
+	}
+	}

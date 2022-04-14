@@ -15,19 +15,19 @@ public class StoryPostgress implements StoryDao{
 private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFactory();
  
 	@Override
-    // this method needs to insert the object into the database:
-    // so, we need to connect to the database:
+    
+   
     public int create(Story newObj) {
 		Connection connection = connFactory.getConnection();
 		
-        // this stores our sql command, that we would normally to DBeaver/command line
-        //                             0   1     2        3            4    5    6       7             8            9         10         
+        
+        //                          0   1     2        3            4    5    6       7             8            9         10         
         String sql = "insert into story (id, authorname, title, completiondata, genre, lengthofstory,onesentence,description,status,status_id)" +
                 "values (default,?,?,?,?,?,?,?,?,?,?,?)";
 
         try {
-            // create a prepared statement, we pass in the sql command
-            // also the flag "RETURN_GENERATED_KEYS" so we can get that id that is generated
+            
+            
             PreparedStatement preparedStatement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             // set the fields:
             preparedStatement.setString(1, newObj.getAuthorname());
@@ -48,26 +48,26 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
             }
             preparedStatement.setInt(8, status_id);
             
-            connection.setAutoCommit(false); // for tx management (ACID)
-            // execute this command, return number of rows affected:
+            connection.setAutoCommit(false); 
+            
             int count = preparedStatement.executeUpdate();
-            // lets us return the id that is auto-generated
+            
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            // if we affected one or more rows:
+            
             if (count > 0) {
                 System.out.println("story added!");
-                // return the generated id:
-                // before we call resultSet.next(), it's basically pointing to nothing useful
-                // but moving that pointer allows us to get the information that we want
+                
+                
+                
                 resultSet.next();
                 int id = resultSet.getInt(1);
                 newObj.setId(id);
-                connection.commit(); // commit the changes to the DB
+                connection.commit(); 
             }
-            // if 0 rows are affected, something went wrong:
+            
             else {
                 System.out.println("Something went wrong when trying to sybmit story!");
-                connection.rollback(); // rollback the changes
+                connection.rollback(); 
             }
         } catch (SQLException e){
             // print out what went wrong:
@@ -89,14 +89,12 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
     }
 
     @Override
-    // take in an id, return the corresponding pet
+    
     public Story getById(int id) {
-        // initialize our pet object to be null:
+      
         Story story = null;
-        // placeholder for our final sql string
-        // ? placeholder for our id:
-        // * means all fields
-        // but we specify an id so we only get one single pet:
+       
+        
         String sql = "SELECT * FROM story WHERE id = ?";
 
         try (Connection connection = connFactory.getConnection()) {
@@ -284,6 +282,12 @@ Connection connection = connFactory.getConnection();
     	
         return storys;
 
+		
+	}
+
+	@Override
+	public void deleteById(int id) {
+		// TODO Auto-generated method stub
 		
 	}
 

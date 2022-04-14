@@ -34,12 +34,17 @@ import net.revature.mymodle.Users;
 		
 		
 		
-		public Users submitStory(Users user, Story storyTosubmit) throws AlreadySubmittedException;
+		public Users submitStory(Users user, Story storyTosubmit) throws AlreadySubmittedException, Exception;
 
 
 
 
 		 public Story getStoryById(int id);
+
+
+
+
+		 public Users getById(int id);
 		
 	
 

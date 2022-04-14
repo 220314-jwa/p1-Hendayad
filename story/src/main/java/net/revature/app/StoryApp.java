@@ -1,5 +1,9 @@
 package net.revature.app;
+import net.revature.data.DeaFactory;
+import net.revature.data.StoryDao;
 import net.revature.exception.AlreadySubmittedException;
+
+import java.util.List;
 import java.util.Map;
 import io.javalin.Javalin;
 import io.javalin.http.HttpCode;
@@ -16,13 +20,51 @@ public class StoryApp {
 	
 	public static void main (String[] args) {
 		Javalin app = Javalin.create();
-		app.start();
+		app.start(8081);
 		
-		// GET to /pets: get available pets
+		app.post("/storys", ctx -> {
+		
+			
+			Story story = ctx.bodyAsClass(net.revature.mymodle.Story.class);
+		
+			StoryDao storyDao = DeaFactory.getStoryDao();
+			
+			int id = storyDao.create(story);
+			
+			ctx.result("The story id is: " + id);
+		});
+	
+		app.get("/storys/{id}", ctx -> {
+			
+			int id = Integer.parseInt(ctx.pathParam("id"));
+			
+			StoryDao petDAO = DeaFactory.getStoryDao();
+			Story resultPet = petDAO.getById(id);
+			ctx.json(resultPet);
+		});
+
+		app.get("/all_storyss", ctx -> {
+			StoryDao storyDao = DeaFactory.getStoryDao();
+			List<Story> storys = storyDao.getAll();
+			ctx.json(storys);
+		});
+
+		app.put("/storys", ctx -> {
+			Story story = ctx.bodyAsClass(net.revature.mymodle.Story.class);
+			StoryDao storyDao = DeaFactory.getStoryDao();
+			storyDao.update(story);
+		});
+
+		app.delete("/storys", ctx -> {
+			int deleteId = Integer.parseInt(ctx.queryParam("id"));
+			
+			StoryDao petDAO = DeaFactory.getStoryDao();
+			petDAO.deleteById(deleteId);
+		});
+
+		
 		app.get("/storys", ctx -> {
-			// .json() is an alternative to .result() that
-			// sets the data type as JSON, the format that we
-			// will be sending/receiving data in!
+		
 			ctx.json(userServ.viewAvailableStorys());
 		});
 		
@@ -40,10 +82,9 @@ public class StoryApp {
 			}
 		});
 		
-		// POST to /auth: log in
+		
 		app.post("/auth", ctx -> {
-			// if the keys in JSON data don't exactly match a class,
-			// we can just use a Map!
+			
 			Map<String,String> credentials = ctx.bodyAsClass(Map.class);
 			String username = credentials.get("username");
 			String password = credentials.get("password");
@@ -56,23 +97,21 @@ public class StoryApp {
 			}
 		});
 		
-		// PUT to /pets/{id}/adopt where {id} will be a number (a pet ID): adopt pet
+	
 		app.put("/storys/{id}/submit", ctx -> {
-			// first we can grab the ID from the URI
-			// since it is part of the path (URI) it is a path parameter
-			// so we use ctx.pathParam and use the name we specified in
-			// the path above
+		
+			
 			int storyId = Integer.parseInt(ctx.pathParam("id"));
 			Story storyToSubmit = userServ.getStoryById(storyId);
 			
-			// now we need to get the User from the request body
+			
 			Users user = ctx.bodyAsClass(Users.class);
 			
 			try {
-				// now we have everything we need to adopt the pet
+				
 				user = userServ.submitStory(user, storyToSubmit);
 				
-				// then we can return the updated user
+				
 				ctx.json(user);
 			} catch (AlreadySubmittedException e) {
 				ctx.status(HttpCode.CONFLICT); // 409 conflict

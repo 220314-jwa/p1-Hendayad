@@ -217,6 +217,18 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 
 	}
 
+	@Override
+	public void deleteById(int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateStorys(int storyId, int userId) throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 
 }
