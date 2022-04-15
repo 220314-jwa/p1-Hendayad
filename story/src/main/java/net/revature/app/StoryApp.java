@@ -19,8 +19,12 @@ public class StoryApp {
 	private static UserService userServ = new UserServiceImpl();
 	
 	public static void main (String[] args) {
-		Javalin app = Javalin.create();
-		app.start(8081);
+		Javalin app = Javalin.create(config -> {
+			config.enableCorsForAllOrigins();
+		});
+		
+	
+		app.start(8080);
 		
 		app.post("/storys", ctx -> {
 		

@@ -21,8 +21,10 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	public int create(Users newObj) {
 		Connection conn = connFactory.getConnection();
 		try {
-			String sql = "insert into users (id, username, passwd,lastname)"
-					+ " values (default,?,?,?);";
+
+			String sql = "insert into person (full_name, username, passwd, role_id)"
+					+ " values (?,?,?,?)";
+
 			PreparedStatement pStmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
 			pStmt.setString(1, newObj.getFirstName() + " " + newObj.getLastName());
 			pStmt.setString(2, newObj.getUsername());
@@ -61,7 +63,7 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	public Users getById(int id) {
 		Users user = null;
 		try (Connection conn = connFactory.getConnection()) {
-			String sql = "select * from person join pet_owner on person.id=pet_owner.owner_id"
+			String sql = "select * from person join story_owner on person.id=story_owner.owner_id"
 					+ " where person.id = ?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, id);
@@ -93,7 +95,7 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 			// left join because we want ALL the people even if they don't have any pets.
 			// a full join would be fine too since everything in the pet_owner table
 			// will have a user associated with it, but a left join makes more sense logically
-			String sql = "select * from person left join pet_owner on person.id=pet_owner.owner_id";
+			String sql = "select * from person left join story_owner on person.id=story_owner.owner_id";
 			Statement stmt = conn.createStatement();
 			
 			ResultSet resultSet = stmt.executeQuery(sql);
@@ -159,7 +161,7 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	public void delete(Users objToDelete) {
 		Connection conn = connFactory.getConnection();
 		try {
-			String sql = "delete from users where id=?";
+			String sql = "delete from person where id=?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setInt(1, objToDelete.getId());
 			
@@ -191,8 +193,9 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	public Users getByUsername(String username) {
 		Users user = null;
 		try (Connection conn = connFactory.getConnection()) {
-			String sql = "select * from users join storys on users.id=story_owner.owner_id"
-					+ " where story.username = ?";
+			String sql = "select * from person where username=?";
+					//"select * from person join story on story.id=story_owner.owner_id"
+					//+ " where story.username = ?";
 			PreparedStatement pStmt = conn.prepareStatement(sql);
 			pStmt.setString(1, username);
 			

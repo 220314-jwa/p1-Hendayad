@@ -9,12 +9,12 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
-
+// setup selinum,added depency to pom file and added chromedriver.exe file
 public class StoryAppHomepage {
     WebDriver driver;
 	
-	// PageFactory allows you to use annotations to have Selenium instantiate your
-	// WebElement fields for you
+	// before we have interaction we have tell selenuim how to find this element
+	
 	@FindBy(id="usernameLogin")
 	WebElement usernameInput;
 	@FindBy(id="passwordLogin")
@@ -23,16 +23,16 @@ public class StoryAppHomepage {
 	WebElement logInBtn;
 	// TODO
 	WebElement messageBox;
-	
+	//web driver implementation for for brower we want to implement 
 	public StoryAppHomepage(WebDriver driver) {
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 	}
-	
+	// we go to our front end page from here
 	public void navigateTo() {
 		driver.get("C:\\Users\\16099\\Documents\\scripts\\index.html");
 	}
-	
+	// interaction method we have in frontend
 	public void inputUsername(String username) {
 		usernameInput.sendKeys(username);
 	}

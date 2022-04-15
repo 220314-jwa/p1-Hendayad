@@ -11,7 +11,7 @@ public class ConnectionFactory {
 	private static ConnectionFactory connectionFactory = null;
 	private static Properties properties;
 
-	private ConnectionFactory() {
+	/*private ConnectionFactory() {
 		InputStream stream = ConnectionFactory.class.getClassLoader().getResourceAsStream("database.properties");
 		try {
 			properties = new Properties();
@@ -19,8 +19,8 @@ public class ConnectionFactory {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-	
+}
+*/	
 	public static ConnectionFactory getConnectionFactory() {
 		if (connectionFactory==null) connectionFactory = new ConnectionFactory();
 		return connectionFactory;
@@ -29,9 +29,10 @@ public class ConnectionFactory {
     // return our connection to the database:
     public Connection getConnection() {
     	Connection connection = null;
-    	String url = properties.getProperty("url");
-        String username = properties.getProperty("username");
-        String password = properties.getProperty("password");
+    	String url = "jdbc:postgresql://localhost:5432/postgres";
+    		
+        String username = "postgres";
+        String password = "Ahmed_2020";
 
         // try connecting to the database:
         try {

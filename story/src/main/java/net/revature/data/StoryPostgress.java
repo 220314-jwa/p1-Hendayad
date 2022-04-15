@@ -22,7 +22,7 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 		
         
         //                          0   1     2        3            4    5    6       7             8            9         10         
-        String sql = "insert into story (id, authorname, title, completiondata, genre, lengthofstory,onesentence,description,status,status_id)" +
+        String sql = "insert into story (id, authorname, title, completiondata, genre, lengthofstory,onesentence,status,description,status_id)" +
                 "values (default,?,?,?,?,?,?,?,?,?,?,?)";
 
         try {
@@ -158,7 +158,7 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	public void update(Story updatedObj) {
 		Connection connection = connFactory.getConnection();
     	// we create the template for the SQL string:
-    	String sql = "update pet set name = ?, species = ?, description = ?, age = ?, status_id = ? where id = ?;";
+    	String sql = "update story set authorname = ?, title = ?,completiondata=?,genre=?,lengthofstory=?,onesentence=?,status=?, description = ?, status_id = ? where id = ?;";
     	try {
         	PreparedStatement preparedStatement = connection.prepareStatement(sql);
         	// fill in the template:
@@ -206,7 +206,7 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	public void delete(Story objToDelete) {
 Connection connection = connFactory.getConnection();
     	
-    	String sql = "delete from Story where id = ?;";
+    	String sql = "delete from story where id = ?;";
     	try {
     		PreparedStatement preparedStatement = connection.prepareStatement(sql);
     		preparedStatement.setInt(1, objToDelete.getId());
@@ -241,7 +241,7 @@ Connection connection = connFactory.getConnection();
 	public List<Story> getByOwner(Users owner) {
 		List<Story> storys = new LinkedList<>();
     	try (Connection conn = connFactory.getConnection()) {
-    		String sql = "select * from story join pet_owner on pet.id=pet_owner.pet_id"
+    		String sql = "select * from story join story_owner on story.id=story_owner.story_id"
     				+ " where story_owner.owner_id=?";
     		PreparedStatement pStmt = conn.prepareStatement(sql);
     		pStmt.setInt(1, owner.getId());
@@ -265,7 +265,7 @@ Connection connection = connFactory.getConnection();
 	public List<Story> getByStatus(String status) {
 		List<Story> storys = new LinkedList<>();
     	try (Connection conn = connFactory.getConnection()) {
-    		String sql = "select * from pet where status_id=?";
+    		String sql = "select * from story where status_id=?";
     		PreparedStatement pStmt = conn.prepareStatement(sql);
     		// may need modified later if new statuses are added
     		int statusId = (status.equals("Pending")?1:2);

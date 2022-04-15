@@ -1,3 +1,4 @@
+//set up mockito,tell the junit that i am using mockito ,static assertion, extend mockito
 package net.revature.services;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,18 +21,22 @@ import net.revature.mymodle.Users;
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
 	@Mock 
+	//mock 2 dataaccess object so when we test we donot actually hit database
+	//so if test fail i know it is from service.
 	private UserDao userDao;
 	@Mock
 	private StoryDao storyDao;
 	@InjectMocks 
+	//where i am supposted to put this mockes ,injected in userservice implementation
 	private UserService userServ = new UserServiceImpl();
 	@Test
 	public void exampleTest() {
 		assertTrue(true);
 	}
 	@Test
+	//test the login 
 	public void logInSuccessfully() throws IncorrectCredentialsException {
-		
+		//we expecting the user to login in with this username and pass
 		String username = "snicholes";
 		String password = "pass";
 		Users mockUser = new Users();
@@ -40,16 +45,18 @@ public class UserServiceTest {
 		when(userDao.getByUsername(username)).thenReturn(mockUser);
 
 		
-		Users result = userServ.logIn(username, password);
+		Users result = userServ.logIn(username, password);//call the method we are testing
 		
-		// assertion
+		// assertion to verify that throws to prevent fail test
 		assertEquals(username, result.getUsername());
 	}
 	
 	@Test
+	//test login when user login with incrorrect username
 	public void logInWrongUsername() {
 		String username = "abc123";
 		String password = "1234567890";
+		//we see what service supposte to do when user login with incorrect
 		when(userDao.getByUsername(username)).thenReturn(null);
 		assertThrows(IncorrectCredentialsException.class, () -> {
 			// put the code that we're expecting to throw the exception
@@ -57,6 +64,7 @@ public class UserServiceTest {
 		});
 	}
 	@Test
+	//test logn when user login with wrong pass
 	public void logInWrongPassword() {
 		String username = "snicholes";
 		String password = "1234567890";
@@ -104,7 +112,7 @@ public class UserServiceTest {
 	}
 
 	@Test
-	
+	//didnot mocked this
 	public void viewStorysSuccessfully() {
 		when(storyDao.getByStatus("pending")).thenReturn(Collections.emptyList());
 		List<Story> Storys = userServ.viewAvailableStorys();

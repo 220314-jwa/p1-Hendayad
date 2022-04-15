@@ -12,7 +12,7 @@ public class StorysController {
 	private static UserService userServ = new UserServiceImpl();
 
 	// GET to /pets
-	public static void getPets(Context ctx) {
+	public static void getStorys(Context ctx) {
 		ctx.json(userServ.viewAvailableStorys());
 	}
 	
