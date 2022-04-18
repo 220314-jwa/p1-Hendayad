@@ -20,10 +20,10 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
     public int create(Story newObj) {
 		Connection connection = connFactory.getConnection();
 		
-        
+			int generatedKeys = 0;
         //                          0   1     2        3            4    5    6       7             8            9         10         
-        String sql = "insert into story (id, authorname, title, completiondata, genre, lengthofstory,onesentence,status,description,status_id)" +
-                "values (default,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "insert into story ( authorname, title, completiondata, genre, lengthofstory,onesentence,status,description,status_id)" +
+                "values (?,?,?,?,?,?,?,?,?,?,?)";
 
         try {
             
@@ -39,29 +39,30 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
             preparedStatement.setString(7, newObj.getDescription());
             
             // shortcut for now, but we need the corresponding id for the status
-            int status_id;
-            if (newObj.getStatus().equals("Pending")) {
+            int status_id = 1;
+            /*if (newObj.getStatus().equals("Pending")) {
                 status_id = 1;
             }
             else {
-                status_id = 2;
-            }
+                status_id = 2;}
+           */ 
             preparedStatement.setInt(8, status_id);
             
             connection.setAutoCommit(false); 
             
-            int count = preparedStatement.executeUpdate();
+           // int count = preparedStatement.executeUpdate();
             
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            ResultSet resultSet = 
+            		preparedStatement.getGeneratedKeys();
             
-            if (count > 0) {
+            if ( resultSet.next()) {
                 System.out.println("story added!");
+                generatedKeys=resultSet.getInt(1);
                 
                 
-                
-                resultSet.next();
-                int id = resultSet.getInt(1);
-                newObj.setId(id);
+               
+                //int id = resultSet.getInt(1);
+               // newObj.setId(id);
                 connection.commit(); 
             }
             
@@ -84,8 +85,8 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 				e.printStackTrace();
 			}
         }
-        
-        return newObj.getId();
+        	return generatedKeys;
+      //  return newObj.getId();
     }
 
     @Override
@@ -125,10 +126,10 @@ private static ConnectionFactory connFactory = ConnectionFactory.getConnectionFa
 	        story.setGenre(resultSet.getString(5));
 	        story.setLengthOfstory(resultSet.getString(6));
 	        story.setOnesentence(resultSet.getString(7));
-	        story.setDescription(resultSet.getString(8));
-	        int status_id = resultSet.getInt(9);
-            String status=(status_id==1)?"Pending" : "Approved";
-	        story.setStatus(status);
+	        story.setStatus(resultSet.getString(8));
+	       //// int status_id = resultSet.getInt(9);
+           // String status=(status_id==1)?"Pending" : "Approved";
+	        story.setDescription(resultSet.getString(9));
 	        return story;
 	}
 
@@ -263,13 +264,13 @@ Connection connection = connFactory.getConnection();
 
 	@Override
 	public List<Story> getByStatus(String status) {
-		List<Story> storys = new LinkedList<>();
+		List<Story> storys = new ArrayList<>();
     	try (Connection conn = connFactory.getConnection()) {
-    		String sql = "select * from story where status_id=?";
+    		String sql = "select * from story where status=?;";
     		PreparedStatement pStmt = conn.prepareStatement(sql);
     		// may need modified later if new statuses are added
-    		int statusId = (status.equals("Pending")?1:2);
-    		pStmt.setInt(1, statusId);
+    		//int statusId = (status.equals("Pending")?1:2);
+    		///pStmt.setInt(1, statusId);
     		
     		ResultSet resultSet = pStmt.executeQuery();
     		while (resultSet.next()) {

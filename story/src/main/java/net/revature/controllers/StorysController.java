@@ -11,13 +11,13 @@ import net.revature.services.UserServiceImpl;
 public class StorysController {
 	private static UserService userServ = new UserServiceImpl();
 
-	// GET to /pets
+	
 	public static void getStorys(Context ctx) {
 		ctx.json(userServ.viewAvailableStorys());
 	}
 	
-	// GET to /pets/{id} where {id} is the ID of the pet
-	public static void getPetById(Context ctx) {
+
+	public static void getStoryById(Context ctx) {
 		int id = Integer.parseInt(ctx.pathParam("id"));
 		Story story = userServ.getStoryById(id);
 		if (story != null)
@@ -27,8 +27,8 @@ public class StorysController {
 	}
 	
 	public static void submitStory(Context ctx) {
-		int petId = Integer.parseInt(ctx.pathParam("id"));
-		Story storyToSubmit = userServ.getStoryById(petId);
+		int storyId = Integer.parseInt(ctx.pathParam("id"));
+		Story storyToSubmit = userServ.getStoryById(storyId);
 		
 		Users users = ctx.bodyAsClass(Users.class);
 		

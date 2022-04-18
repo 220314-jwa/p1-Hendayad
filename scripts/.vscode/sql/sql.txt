@@ -1,0 +1,34 @@
+drop table story cascade;
+create table story (
+id integer not null,
+authorname varchar (50) not null,
+title varchar (50) not null,
+completiondata varchar (50) not null,
+genre varchar (50) not null,
+lengthofstory varchar (50) not null,
+onesentence varchar (50) not null ,
+status varchar (50) not null,
+description varchar (500) not null
+);
+
+insert into status (name) values
+	('Pendinng'),
+	('Approved');
+
+create table user_role (
+	id serial primary key,
+	name varchar(50)
+);
+
+cReAte tABle peRsOn (
+	id serial primary key,
+	full_name varchar(100) not null,
+	username varchar(30) unique not null,
+	passwd varchar(45) not null,
+	role_id integer not null references user_role
+);
+
+create table story_owner (
+	story_id integer references story,
+	owner_id integer references person
+);

@@ -42,9 +42,12 @@ public class StoryApp {
 			
 			int id = Integer.parseInt(ctx.pathParam("id"));
 			
-			StoryDao petDAO = DeaFactory.getStoryDao();
-			Story resultPet = petDAO.getById(id);
-			ctx.json(resultPet);
+			StoryDao storyDAO = DeaFactory.getStoryDao();
+			
+			Story resultStory = storyDAO.getById(id);
+			System.out.println(id);
+			System.out.println(resultStory);
+			ctx.json(resultStory);
 		});
 
 		app.get("/all_storyss", ctx -> {
@@ -62,8 +65,8 @@ public class StoryApp {
 		app.delete("/storys", ctx -> {
 			int deleteId = Integer.parseInt(ctx.queryParam("id"));
 			
-			StoryDao petDAO = DeaFactory.getStoryDao();
-			petDAO.deleteById(deleteId);
+			StoryDao storyDAO = DeaFactory.getStoryDao();
+			storyDAO.deleteById(deleteId);
 		});
 
 		
